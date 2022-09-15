@@ -5,6 +5,8 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { CreateBookPage } from "./pages/CreateBookPage";
+import { StudentPage } from "./pages/StudentPage";
+
 import { MyBooks } from "./pages/MyBooks";
 import { Menu } from "./components/Menu";
 import { PrivateRoute } from "./components/PrivateRoute";
@@ -28,6 +30,12 @@ const routes = [
     element: <CreateBookPage />,
     text: "Create Book",
     permission: "book.create",
+  },
+  {
+    path: "/students",
+    element: <StudentPage />,
+    text: "Students",
+    permission: "student.returnBook",
   },
 ];
 
