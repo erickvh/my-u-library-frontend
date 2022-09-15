@@ -1,10 +1,11 @@
 import { useAuth } from "../auth";
 import Table from "react-bootstrap/Table";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getBooks } from "../services/books";
 import { Loading } from "../utils/Loading";
 import { Form, Button } from "react-bootstrap";
 import { getAuthenticated } from "../localstorage/auth";
+import { CustomPagination } from "../components/CustomPagination";
 
 function HomePage() {
   const auth = useAuth();
@@ -16,17 +17,26 @@ function HomePage() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [genre, setGenre] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    getBooks({ token: user.token }).then((data) => {
-      setBooks(data);
-      setLoading(false);
-    });
+  const handleChangePage = useCallback((page) => {
+    setPage(page);
   }, []);
 
-  const search = () => {
-    getBooks({ token: user.token, title, author, genre }).then((data) => {
+  useEffect(() => {
+    getBooks({ token: user.token, title, author, genre, page }).then((data) => {
       setBooks(data);
+      setTotalPages(data.last_page);
+      setLoading(false);
+    });
+  }, [page, title, author, genre]);
+
+  const search = () => {
+    setLoading(true);
+    setPage(1);
+    getBooks({ token: user.token, title, author, genre, page }).then((data) => {
+      setTotalPages(data.last_page);
       setLoading(false);
     });
   };
@@ -112,6 +122,17 @@ function HomePage() {
           </tbody>
         </Table>
       )}
+
+      <div className="d-flex justify-content-center">
+        {totalPages > 1 && loading == false && (
+          <CustomPagination
+            className="justify-content-center"
+            total={totalPages}
+            current={page}
+            onChangePage={handleChangePage}
+          />
+        )}
+      </div>
     </div>
   );
 }
