@@ -18,7 +18,9 @@ function LoginPage() {
           <h2>Login</h2>
         </Col>
       </Row>
-      <LoginForm />
+      <div class="row">
+        <LoginForm />
+      </div>
     </div>
   );
 }
