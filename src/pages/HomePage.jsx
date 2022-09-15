@@ -1,7 +1,7 @@
 import { useAuth } from "../auth";
 import Table from "react-bootstrap/Table";
 import { useCallback, useEffect, useState } from "react";
-import { getBooks } from "../services/books";
+import { getBooks, checkoutBook } from "../services/books";
 import { Loading } from "../utils/Loading";
 import { Form, Button } from "react-bootstrap";
 import { getAuthenticated } from "../localstorage/auth";
@@ -39,6 +39,15 @@ function HomePage() {
       setTotalPages(data.last_page);
       setLoading(false);
     });
+  };
+
+  const checkout = (id) => {
+    if (confirm("Are you sure you want to checkout this book?")) {
+      checkoutBook({ token: user.token, bookId: id }).then((data) => {
+        alert("Book checked out successfully!");
+        search();
+      });
+    }
   };
 
   return (
@@ -114,7 +123,14 @@ function HomePage() {
                 <td>{book.stock}</td>
                 <td>
                   {permissions.includes("book.checkout") && (
-                    <Button variant="success">Checkout</Button>
+                    <Button
+                      variant="success"
+                      onClick={() => {
+                        checkout(book.id);
+                      }}
+                    >
+                      Checkout
+                    </Button>
                   )}
                 </td>
               </tr>

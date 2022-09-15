@@ -19,4 +19,17 @@ async function getBooks({
   return [];
 }
 
-export { getBooks };
+async function checkoutBook({ token = "", bookId = "" }) {
+  const axios = createAxios(token);
+
+  try {
+    const response = await axios.post(`/books/${bookId}/checkout`);
+    console.log(response.data);
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
+}
+
+export { getBooks, checkoutBook };
