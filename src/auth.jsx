@@ -7,7 +7,7 @@ import {
   getAuthenticated,
   saveAuthenticated,
   removeAuthenticated,
-} from "././localstorage/auth";
+} from "./localstorage/auth";
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
@@ -28,11 +28,11 @@ function AuthProvider({ children }) {
       });
 
       if (response.status === 200) {
-        const user = response.data.token;
+        const { user, token } = response.data;
+        const auth = { user, token };
+        setUser(auth);
 
-        setUser(user);
-
-        saveAuthenticated(user);
+        saveAuthenticated(auth);
 
         toast.success("Login successful");
         navigate("/");

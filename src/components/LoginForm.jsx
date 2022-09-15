@@ -6,7 +6,6 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import { useAuth } from "./../auth";
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 
 function LoginForm() {
   const auth = useAuth();
