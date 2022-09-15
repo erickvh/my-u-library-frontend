@@ -17,13 +17,13 @@ function LoginForm() {
     e.preventDefault();
     await auth.login({ email, password });
 
-    console.log(auth);
+    console.log("inside loginform", auth);
 
-    if (!auth.errors) {
-      toast.success("Login successful");
-    } else {
-      toast.error(auth.errors.message);
-    }
+    // if (!auth.errors) {
+    //   toast.success("Login successful");
+    // } else {
+    //   toast.error(auth.errors.message);
+    // }
   };
 
   return (

@@ -1,14 +1,23 @@
-import React from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "./config/api";
-
-const AuthContext = React.createContext();
+import { toast } from "react-toastify";
+import {
+  getAuthenticated,
+  saveAuthenticated,
+  removeAuthenticated,
+} from "././localstorage/auth";
+const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const navigate = useNavigate();
-  const [user, setUser] = React.useState(null);
-  const [errors, setErrors] = React.useState(null);
+  const [user, setUser] = useState(getAuthenticated);
+  const [errors, setErrors] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
 
   const login = async ({ email, password }) => {
     try {
@@ -17,24 +26,35 @@ function AuthProvider({ children }) {
         email: email,
         password: password,
       });
+      console.log("response", response);
 
       if (response.status === 200) {
-        setUser(response.data.user);
+        const user = response.data.token;
+        console.log("200", user);
+        setUser(user);
+
+        saveAuthenticated(user);
+
+        toast.success("Login successful");
         navigate("/");
       }
     } catch (error) {
       console.log("inside login", error.response.data);
       if (error.response.status === 401) {
-        setErrors(error.response.data);
+        setErrors(error.response.data.message);
+        toast.error(error.response.data.message);
       } else if (error.response.status === 422) {
-        setErrors(error.response.data);
+        setErrors(error.response.data.errors);
+        toast.error(errors);
       }
     }
   };
 
   const logout = () => {
     setUser(null);
-    navigate("/");
+    removeAuthenticated();
+
+    navigate("/login");
   };
 
   const auth = { user, errors, login, logout };
@@ -43,7 +63,7 @@ function AuthProvider({ children }) {
 }
 
 function useAuth() {
-  const auth = React.useContext(AuthContext);
+  const auth = useContext(AuthContext);
 
   return auth;
 }
