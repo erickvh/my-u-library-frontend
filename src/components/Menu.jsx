@@ -7,6 +7,7 @@ import {
   Nav,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { getAuthenticated } from "../localstorage/auth";
 import { useAuth } from "./../auth";
 import { routes } from "./../Navigation";
 
@@ -16,7 +17,9 @@ function Menu() {
     auth.logout();
   };
 
-  const user = auth.user;
+  const user = auth.user || getAuthenticated();
+  let permissions = [];
+  if (user) permissions = user.user.permission;
 
   return (
     <Navbar bg="dark" variant={"dark"} expand="lg">
@@ -38,30 +41,25 @@ function Menu() {
 
           {user && (
             <>
-              {routes.map((route) => (
-                <LinkContainer to={route.path} key={route.path}>
-                  <Nav.Link>{route.text}</Nav.Link>
-                </LinkContainer>
-              ))}
-              <Button
-                variant="secondary"
-                onClick={() => logout(() => history.push("/"))}
-              >
-                Logout
-              </Button>
+              {routes.map(
+                (route) =>
+                  permissions.includes(route.permission) && (
+                    <LinkContainer to={route.path} key={route.path}>
+                      <Nav.Link>{route.text}</Nav.Link>
+                    </LinkContainer>
+                  )
+              )}
             </>
           )}
 
-          {/* {routes.map((route) => {
-            return (
-              <LinkContainer to={route.to} key={route.to}>
-                <Nav.Link key={route.to}>{route.text}</Nav.Link>
-              </LinkContainer>
-            );
-          })}
-          <Button variant="secondary" onClick={logout}>
-            Logout
-          </Button> */}
+          {user && (
+            <Button
+              variant="secondary"
+              onClick={() => logout(() => history.push("/"))}
+            >
+              Logout
+            </Button>
+          )}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

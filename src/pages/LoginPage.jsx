@@ -18,8 +18,10 @@ function LoginPage() {
           <h2>Login</h2>
         </Col>
       </Row>
-      <div class="row">
-        <LoginForm />
+      <div className="row justify-content-center">
+        <div className="col-4">
+          <LoginForm />
+        </div>
       </div>
     </div>
   );
