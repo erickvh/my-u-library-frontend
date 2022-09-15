@@ -44,4 +44,13 @@ async function getMyBooks({ token = "", bookId = "" }) {
   return [];
 }
 
-export { getBooks, checkoutBook, getMyBooks };
+async function getGenres({ token = "" }) {
+  const axios = createAxios(token);
+  try {
+    const response = await axios.get(`/genres`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+export { getBooks, checkoutBook, getMyBooks, getGenres };
