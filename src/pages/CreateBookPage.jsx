@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useAuth } from "../auth";
 import { getAuthenticated } from "../localstorage/auth";
-import { getRoles, createUser } from "../services/auth";
 import { toast } from "react-toastify";
 import { getGenres, createBook } from "../services/books";
 import { useNavigate } from "react-router-dom";
@@ -132,7 +131,7 @@ function CreateBookPage() {
             </Form.Group>
 
             <Button variant="primary" type="submit">
-              Submit
+              Create Book
             </Button>
           </Form>
         </div>

@@ -123,7 +123,7 @@ function CreateUserPage() {
             </Form.Group>
 
             <Button variant="primary" type="submit">
-              Submit
+              Create user
             </Button>
           </Form>
         </div>

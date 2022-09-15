@@ -1,8 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
 import { useAuth } from "./../auth";
@@ -48,7 +46,7 @@ function LoginForm() {
           </Form.Group>
 
           <Button variant="primary" type="submit">
-            Submit
+            Login
           </Button>
         </Form>
       </Container>

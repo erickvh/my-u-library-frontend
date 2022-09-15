@@ -13,11 +13,12 @@ function LoginPage() {
 
   return (
     <div>
-      <Row className="text-center my-4">
+      <div className="row text-center my-3">
         <Col>
           <h2>Login</h2>
         </Col>
-      </Row>
+      </div>
+
       <div className="row justify-content-center">
         <div className="col-4">
           <LoginForm />
