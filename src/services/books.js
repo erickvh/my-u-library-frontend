@@ -32,4 +32,16 @@ async function checkoutBook({ token = "", bookId = "" }) {
   return false;
 }
 
-export { getBooks, checkoutBook };
+async function getMyBooks({ token = "", bookId = "" }) {
+  const axios = createAxios(token);
+
+  try {
+    const response = await axios.get(`students/my-books`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+  return [];
+}
+
+export { getBooks, checkoutBook, getMyBooks };
