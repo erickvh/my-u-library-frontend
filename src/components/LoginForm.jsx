@@ -16,14 +16,6 @@ function LoginForm() {
   const login = async (e) => {
     e.preventDefault();
     await auth.login({ email, password });
-
-    console.log("inside loginform", auth);
-
-    // if (!auth.errors) {
-    //   toast.success("Login successful");
-    // } else {
-    //   toast.error(auth.errors.message);
-    // }
   };
 
   return (
