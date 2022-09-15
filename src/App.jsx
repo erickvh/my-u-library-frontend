@@ -1,10 +1,15 @@
 import { useState } from "react";
-import { NavBar } from "./components/NavBar";
+import { Navigation } from "./Navigation";
 import { LoginPage } from "./pages/LoginPage";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
     <div className="App">
-      <NavBar />
+      <ToastContainer />
+      <Navigation />
     </div>
   );
 }

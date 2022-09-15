@@ -8,16 +8,28 @@ const AuthContext = React.createContext();
 function AuthProvider({ children }) {
   const navigate = useNavigate();
   const [user, setUser] = React.useState(null);
+  const [errors, setErrors] = React.useState(null);
 
-  const login = ({ email, password }) => {
-    axios
-      .post(`${API_URL}/login`, { email: email, password: password })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
+  const login = async ({ email, password }) => {
+    try {
+      setErrors(null);
+      const response = await axios.post(`${API_URL}/login`, {
+        email: email,
+        password: password,
       });
+
+      if (response.status === 200) {
+        setUser(response.data.user);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("inside login", error.response.data);
+      if (error.response.status === 401) {
+        setErrors(error.response.data);
+      } else if (error.response.status === 422) {
+        setErrors(error.response.data);
+      }
+    }
   };
 
   const logout = () => {
@@ -25,7 +37,7 @@ function AuthProvider({ children }) {
     navigate("/");
   };
 
-  const auth = { user, login, logout };
+  const auth = { user, errors, login, logout };
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }
