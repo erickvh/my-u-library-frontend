@@ -53,4 +53,19 @@ async function getGenres({ token = "" }) {
     console.log(error);
   }
 }
-export { getBooks, checkoutBook, getMyBooks, getGenres };
+
+async function createBook({ token = "", data = {} }) {
+  const axios = createAxios(token);
+
+  try {
+    const response = await axios.post(`/books`, data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    if (error.response.status === 422) {
+      return { success: false, data: error.response.data };
+    }
+  }
+  return [];
+}
+
+export { getBooks, checkoutBook, getMyBooks, getGenres, createBook };

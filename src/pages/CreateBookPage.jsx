@@ -4,15 +4,18 @@ import { useAuth } from "../auth";
 import { getAuthenticated } from "../localstorage/auth";
 import { getRoles, createUser } from "../services/auth";
 import { toast } from "react-toastify";
-import { getGenres } from "../services/books";
+import { getGenres, createBook } from "../services/books";
+import { useNavigate } from "react-router-dom";
 
 function CreateBookPage() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [publishedYear, setPublishedYear] = useState(null);
   const [genre, setGenre] = useState(null);
-  const [genres, setGenres] = useState([]);
+  const [stock, setStock] = useState(0);
 
+  const [genres, setGenres] = useState([]);
+  const navigate = useNavigate();
   const [errors, setErrors] = useState(null);
 
   const auth = useAuth();
@@ -23,7 +26,31 @@ function CreateBookPage() {
     });
   }, []);
 
-  const createBookSubmit = (e) => {};
+  const createBookSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      title,
+      author,
+      published_year: publishedYear,
+      genre_id: genre,
+      stock: stock || 0,
+    };
+
+    createBook({
+      token: user.token,
+      data,
+    }).then((response) => {
+      if (response.success) {
+        toast("Book successfully created");
+        setErrors(null);
+        navigate("/");
+      } else {
+        toast.error(response.data.message);
+        setErrors(response.data.errors);
+      }
+    });
+  };
+
   return (
     <>
       <div className="container">
@@ -59,7 +86,7 @@ function CreateBookPage() {
             <Form.Group className="mb-3">
               <Form.Label>Published at</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 required
                 placeholder="Enter a published year"
                 onChange={(e) => setPublishedYear(e.target.value)}
@@ -71,7 +98,22 @@ function CreateBookPage() {
                 </Form.Text>
               )}
             </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Stock</Form.Label>
+              <Form.Control
+                type="number"
+                min="0"
+                max="1000"
+                placeholder="Add stock if it's needed"
+                onChange={(e) => setStock(e.target.value)}
+              />
 
+              {errors?.published_year && (
+                <Form.Text className="text-danger">
+                  {errors.published_year}
+                </Form.Text>
+              )}
+            </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Genre</Form.Label>
               <Form.Select size="sm" onChange={(e) => setGenre(e.target.value)}>
@@ -84,7 +126,7 @@ function CreateBookPage() {
               </Form.Select>
               {errors?.genre_id && (
                 <Form.Text className="text-danger">
-                  Genred field is required
+                  Genre field is required
                 </Form.Text>
               )}
             </Form.Group>
