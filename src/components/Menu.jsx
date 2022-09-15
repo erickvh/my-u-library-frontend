@@ -1,4 +1,3 @@
-import { routes } from "../routes";
 import {
   Navbar,
   NavDropdown,
@@ -9,11 +8,15 @@ import {
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useAuth } from "./../auth";
+import { routes } from "./../Navigation";
+
 function Menu() {
   const auth = useAuth();
   const logout = () => {
     auth.logout();
   };
+
+  const user = auth.user;
 
   return (
     <Navbar bg="dark" variant={"dark"} expand="lg">
@@ -25,7 +28,31 @@ function Menu() {
           style={{ maxHeight: "100px" }}
           navbarScroll
         >
-          {routes.map((route) => {
+          {!user && (
+            <>
+              <LinkContainer to="/login">
+                <Nav.Link>Login</Nav.Link>
+              </LinkContainer>
+            </>
+          )}
+
+          {user && (
+            <>
+              {routes.map((route) => (
+                <LinkContainer to={route.path} key={route.path}>
+                  <Nav.Link>{route.text}</Nav.Link>
+                </LinkContainer>
+              ))}
+              <Button
+                variant="secondary"
+                onClick={() => logout(() => history.push("/"))}
+              >
+                Logout
+              </Button>
+            </>
+          )}
+
+          {/* {routes.map((route) => {
             return (
               <LinkContainer to={route.to} key={route.to}>
                 <Nav.Link key={route.to}>{route.text}</Nav.Link>
@@ -34,7 +61,7 @@ function Menu() {
           })}
           <Button variant="secondary" onClick={logout}>
             Logout
-          </Button>
+          </Button> */}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

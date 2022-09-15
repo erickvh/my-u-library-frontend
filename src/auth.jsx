@@ -16,7 +16,7 @@ function AuthProvider({ children }) {
   const [errors, setErrors] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(user));
+    saveAuthenticated(user);
   }, [user]);
 
   const login = async ({ email, password }) => {
@@ -26,11 +26,10 @@ function AuthProvider({ children }) {
         email: email,
         password: password,
       });
-      console.log("response", response);
 
       if (response.status === 200) {
         const user = response.data.token;
-        console.log("200", user);
+
         setUser(user);
 
         saveAuthenticated(user);
@@ -39,7 +38,8 @@ function AuthProvider({ children }) {
         navigate("/");
       }
     } catch (error) {
-      console.log("inside login", error.response.data);
+      // error cases
+
       if (error.response.status === 401) {
         setErrors(error.response.data.message);
         toast.error(error.response.data.message);
